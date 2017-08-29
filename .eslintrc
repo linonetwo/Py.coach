@@ -1,0 +1,48 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb"
+  ],
+  "plugins": [
+    "import",
+    "react",
+    "flowtype"
+  ],
+  "rules": {
+    "arrow-body-style": 1,
+    "no-restricted-syntax": 0,
+    "no-await-in-loop": 0,
+    "react/jsx-filename-extension": 0,
+    "no-constant-condition": 0,
+    "semi": 0,
+    "no-confusing-arrow": 0,
+    "react/jsx-pascal-case": 0,
+    "max-len": 0,
+    "yoda": ["error", "never", { "exceptRange": true }]
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "./tools/webpack.entry.js"
+      }
+    }
+  },
+  "env": {
+    "mocha": true
+  },
+  "globals": {
+    "window": true,
+    "document": true,
+    "localStorage": true,
+    "navigator": true,
+    "fetch": true,
+    "URL": true,
+    "__DEV__": true,
+    "__TEST__": true,
+    "__CLIENT__": true,
+    "__SERVER__": true,
+    "__SSR__": true,
+    "__PERSIST_GQL__": true,
+    "__BACKEND_URL__": true
+  }
+}
