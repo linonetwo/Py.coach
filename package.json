@@ -8,7 +8,11 @@
     "markdown-it": "^8.4.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-scripts": "1.0.12"
+    "react-markdown": "^2.5.0",
+    "react-scripts": "1.0.12",
+    "rebass": "^1.0.4",
+    "styled-components": "^2.1.2",
+    "url-parse": "^1.1.9"
   },
   "scripts": {
     "start": "react-scripts start",
