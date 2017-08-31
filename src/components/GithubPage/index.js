@@ -4,11 +4,16 @@ import ReactMarkdown from 'react-markdown'
 import { Card as OriginalCard } from 'rebass'
 
 const Card = styled(OriginalCard)`
-  width: 300px;
+  width: 100%;
 
   margin: 10px;
   /* content */
   overflow-y: scroll;
+`
+const IFrame = styled.iframe`
+  width: 100%;
+  height: 100%;
+
 `
 
 type GithubPageProps = {
@@ -18,10 +23,9 @@ type GithubPageProps = {
 export default function GithubPage(props: GithubPageProps) {
   let displayFrame = ''
   if (props.href) {
-    displayFrame = (<iframe
-      title="Github Readme"
-      className="reportpdf"
-      src={`localhost:3001/?url=${props.href}`}
+    displayFrame = (<IFrame
+      title="External Website Readme"
+      src={props.href}
     />)
   }
   if (props.markdown) {
