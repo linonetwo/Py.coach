@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 import { Card as OriginalCard, ButtonTransparent } from 'rebass'
 
@@ -26,9 +26,42 @@ const ButtonTransparentRight = styled(ButtonTransparent)`
 `
 
 type ItemProps = {
-  name: string,
-  href: string,
-  libraryDescription: string,
+  packageInfo: {
+    name: string,
+    href: string,
+    libraryDescription: string,
+  },
+  selectPackage: Function,
+  selectDoc: Function,
+}
+
+class Item extends Component {
+  state = {
+    openDoc: false,
+  }
+
+  props: ItemProps
+
+  render() {
+    return (
+      <ItemContainer key={this.props.packageInfo.href}>
+        <ButtonTransparent
+          onClick={(event) => {
+            event.preventDefault()
+            if (this.state.openDoc) {
+              this.props.selectDoc(this.props.packageInfo)
+            } else {
+              this.props.selectPackage(this.props.packageInfo)
+            }
+            this.setState({ openDoc: !this.state.openDoc })
+          }}
+        >
+          <ItemContent>{this.props.packageInfo.libraryDescription}</ItemContent>
+          <ItemHeader>{this.props.packageInfo.name}</ItemHeader>
+        </ButtonTransparent>
+      </ItemContainer>
+    )
+  }
 }
 
 type ListProps = {
@@ -39,24 +72,17 @@ type ListProps = {
       urlList: Array<ItemProps>,
     }
   },
-  selectItem: Function,
+  selectPackage: Function,
+  selectDoc: Function,
 }
 export default function PackageList(props: ListProps) {
   return (
     <Card>
-      {props.data['Admin Panels'].urlList.map(packageInfo => (
-        <ItemContainer>
-          <ButtonTransparent
-            key={packageInfo.href}
-            onClick={(event) => { event.preventDefault(); props.selectItem(packageInfo) }}
-          >
-            <ItemContent>{packageInfo.libraryDescription}</ItemContent>
-          </ButtonTransparent>
-          <ButtonTransparentRight>
-            <ItemHeader>{packageInfo.name}</ItemHeader>
-          </ButtonTransparentRight>
-        </ItemContainer>
-      ))}
+      {props.data['Admin Panels'].urlList.map(packageInfo => (<Item
+        key={packageInfo.href}
+        packageInfo={packageInfo}
+        {...props}
+      />))}
     </Card>
   )
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
+import cheerio from 'cheerio'
 import URL from 'url-parse'
 import styled from 'styled-components'
 import PackageList from './components/PackageList'
@@ -56,6 +57,20 @@ class App extends Component {
     }
   }
 
+  selectDoc = async (selectedItem) => {
+    axios.get(selectedItem.href, { crossdomain: true })
+      .then(({ status, data }) => {
+        if (status === 200) {
+          const $ = cheerio.load(data)
+          $('a').each((index, anchor) => {
+            console.log($(anchor).text())
+          })
+        }
+      })
+      .catch(error => console.error(selectedItem.href, error))
+    this.setState({ selectedItem: { ...selectedItem } })
+  }
+
   render() {
     return (
       <Container>
@@ -63,7 +78,8 @@ class App extends Component {
           <Search />
           <PackageList
             data={data}
-            selectItem={this.selectPackage}
+            selectPackage={this.selectPackage}
+            selectDoc={this.selectDoc}
           />
         </LeftColumn>
         <RightDisplay>
