@@ -7,36 +7,28 @@ const Card = styled(OriginalCard)`
 
   margin: 10px 0 10px 10px;
   /* content */
-  overflow-y: scroll;
+  overflow: hidden;
 `
 
 const ItemContainer = styled.div`
-  height: 100%;
-
-  border-bottom-width: 1px;
-  border-color: black;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
 `
 const ItemHeader = styled.h3`
-  text-align: right;
-  padding-right: 10px;
+  text-align: left;
 `
 const ItemContent = styled.h3`
-  text-align: left;
-  padding-left: 25px;
+  text-align: right;
+`
+const ButtonTransparentRight = styled(ButtonTransparent)`
+  width: 30%;
 `
 
 type ItemProps = {
   name: string,
   href: string,
   libraryDescription: string,
-}
-function Item(props: ItemProps) {
-  return (
-    <ItemContainer>
-      <ItemHeader>{props.name}</ItemHeader>
-      <ItemContent>{props.libraryDescription}</ItemContent>
-    </ItemContainer>
-  )
 }
 
 type ListProps = {
@@ -47,20 +39,23 @@ type ListProps = {
       urlList: Array<ItemProps>,
     }
   },
-  selectItem: Object => void,
+  selectItem: Function,
 }
 export default function PackageList(props: ListProps) {
   return (
     <Card>
       {props.data['Admin Panels'].urlList.map(packageInfo => (
-        <ButtonTransparent
-          key={packageInfo.href}
-          onClick={(event) => { event.preventDefault(); props.selectItem(packageInfo) }}
-        >
-          <Item
-            {...packageInfo}
-          />
-        </ButtonTransparent>
+        <ItemContainer>
+          <ButtonTransparent
+            key={packageInfo.href}
+            onClick={(event) => { event.preventDefault(); props.selectItem(packageInfo) }}
+          >
+            <ItemContent>{packageInfo.libraryDescription}</ItemContent>
+          </ButtonTransparent>
+          <ButtonTransparentRight>
+            <ItemHeader>{packageInfo.name}</ItemHeader>
+          </ButtonTransparentRight>
+        </ItemContainer>
       ))}
     </Card>
   )
