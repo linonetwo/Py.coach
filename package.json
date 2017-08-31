@@ -5,6 +5,8 @@
   "dependencies": {
     "axios": "^0.16.2",
     "cheerio": "^1.0.0-rc.2",
+    "is-url-superb": "^2.0.0",
+    "koa": "^2.3.0",
     "markdown-it": "^8.4.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
