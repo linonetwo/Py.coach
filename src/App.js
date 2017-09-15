@@ -35,40 +35,51 @@ class App extends Component {
   state = {
     data: {},
     selectedItem: {},
+    docAnchors: [],
   }
 
   componentWillMount() {
     this.setState({ data });
   }
 
-  githubReadmeGetter = axios.create({
+  getDocURL = (readmeURL) => {
+    axios.get(`http://${global.location.hostname}:3001/?url=${readmeURL}`)
+      .then(({ status, data: anchors }) => {
+        if (status === 200) {
+          console.log(anchors)
+          this.setState({ docAnchors: anchors })
+        }
+      })
+      .catch(error => console.error(readmeURL, error))
+  }
+
+  getReadme = async (selectedItem) => {
+    const { host, pathname } = URL(selectedItem.href)
+    if (host === 'github.com') {
+      const readme = (await this.githubGetter(`${pathname}/contents/`)).data
+      this.setState({ selectedItem: { ...selectedItem, base64: readme } })
+    } else {
+      this.setState({ selectedItem: { ...selectedItem } })
+    }
+  }
+
+  githubGetter = axios.create({
     baseURL: 'https://api.github.com/repos',
     timeout: 2000,
     headers: { Accept: 'application/vnd.github.v3.raw' },
   })
 
   selectPackage = async (selectedItem) => {
-    const { host, pathname } = URL(selectedItem.href)
-    if (host === 'github.com') {
-      const readme = (await this.githubReadmeGetter(`${pathname}/readme`)).data
-      this.setState({ selectedItem: { ...selectedItem, readme } })
-    } else {
-      this.setState({ selectedItem: { ...selectedItem } })
-    }
+    this.getReadme(selectedItem)
+    this.getDocURL(selectedItem.href)
   }
 
   selectDoc = async (selectedItem) => {
-    axios.get(selectedItem.href, { crossdomain: true })
-      .then(({ status, data }) => {
-        if (status === 200) {
-          const $ = cheerio.load(data)
-          $('a').each((index, anchor) => {
-            console.log($(anchor).text())
-          })
-        }
-      })
-      .catch(error => console.error(selectedItem.href, error))
-    this.setState({ selectedItem: { ...selectedItem } })
+    const iframe = document.getElementById('iframe');
+    iframe.srcdoc = 'fred rules';
+    // this.setState({ selectedItem: {
+    //   href: this.state.docAnchors[0].anchorHref,
+    // } })
   }
 
   render() {
@@ -85,7 +96,7 @@ class App extends Component {
         <RightDisplay>
           <GithubPage
             href={this.state.selectedItem.href}
-            markdown={this.state.selectedItem.readme}
+            base64={this.state.selectedItem.base64}
           />
         </RightDisplay>
       </Container>

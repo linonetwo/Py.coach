@@ -18,6 +18,7 @@ const IFrame = styled.iframe`
 
 type GithubPageProps = {
   href: ?string,
+  base64: ?string,
   markdown: ?string,
 }
 export default function GithubPage(props: GithubPageProps) {
@@ -26,6 +27,12 @@ export default function GithubPage(props: GithubPageProps) {
     displayFrame = (<IFrame
       title="External Website Readme"
       src={props.href}
+    />)
+  }
+  if (props.base64) {
+    displayFrame = (<IFrame
+      title="External Website Readme"
+      src={`data:text/html;base64,${props.base64}`}
     />)
   }
   if (props.markdown) {
